@@ -27,14 +27,14 @@ if __name__ == "__main__":
     # Show the arm in all 0 configuration
     q0 = [0] * N
     T0 = arm.fkine(q0)
-    print(f"The end effector is at\n{T0}\n")
+    print(f"When q=[0, 0, 0], the end effector is at\n{T0}\n")
     fig_1 = plt.figure(1)
     arm.plot(q0, fig=fig_1)
 
     # Show the arm in another configuration
     q1 = [PI / 4] * N
     T1 = arm.fkine(q1)
-    print(f"The end effector is at\n{T1}\n")
+    print(f"When q=[pi/4, pi/4, pi/4], the end effector is at\n{T1}\n")
     fig_2 = plt.figure(2)
     arm.plot(q1, fig=fig_2)
 
