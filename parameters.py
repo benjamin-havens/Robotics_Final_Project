@@ -1,4 +1,5 @@
 import roboticstoolbox as rtb
+import matplotlib.pyplot as plt
 
 PI = 3.14159265358979323846
 LINK_LENGTH = 0.15
@@ -27,14 +28,17 @@ if __name__ == "__main__":
     q0 = [0] * N
     T0 = arm.fkine(q0)
     print(f"The end effector is at\n{T0}\n")
-    arm.plot(q0, block=True)
+    fig_1 = plt.figure(1)
+    arm.plot(q0, fig=fig_1)
 
     # Show the arm in another configuration
     q1 = [PI / 4] * N
     T1 = arm.fkine(q1)
     print(f"The end effector is at\n{T1}\n")
-    arm.plot(q1, block=True)
+    fig_2 = plt.figure(2)
+    arm.plot(q1, fig=fig_2)
 
     # Show the arm moving from 0 to the second configuration
     trajectory = arm.jtraj(T0, T1, t=200)  # use t steps
-    arm.plot(trajectory.q, block=True)
+    fig_3 = plt.figure(3)
+    arm.plot(trajectory.q, fig=fig_3, block=True)
