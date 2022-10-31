@@ -22,7 +22,7 @@ class PlanarArm(rtb.DHRobot):
 if __name__ == "__main__":
     # Print the arm parameters
     arm = PlanarArm()
-    print(arm, "\n")
+    print("\n", arm, "\n", sep="")
 
     # Show the arm in all 0 configuration
     q0 = [0] * N
