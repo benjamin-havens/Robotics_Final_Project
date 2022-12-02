@@ -7,7 +7,7 @@ project(arm_control)
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-find_package(catkin REQUIRED)
+find_package(catkin REQUIRED rospy message_generation sensor_msgs control_msgs)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -66,7 +66,8 @@ find_package(catkin REQUIRED)
 ## Generate added messages and services with any dependencies listed here
 # generate_messages(
 #   DEPENDENCIES
-#   std_msgs  # Or other packages containing msgs
+#     sensor_msgs
+#     control_msgs
 # )
 
 ################################################
@@ -101,7 +102,7 @@ find_package(catkin REQUIRED)
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES arm_control
-#  CATKIN_DEPENDS other_catkin_pkg
+ CATKIN_DEPENDS rospy sensor_msgs control_msgs message_runtime
 #  DEPENDS system_lib
 )
 
