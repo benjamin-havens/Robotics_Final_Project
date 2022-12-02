@@ -4,11 +4,26 @@ Contains the parameters for final project for ME 537, a simple planar arm.
 Isaac Shaw, Joey LeCheminant, and Benjamin Havens
 """
 
-#%% IMPORTS
+###########
+# IMPORTS #
+###########
 import roboticstoolbox as rtb
 import matplotlib.pyplot as plt
+from enum import Enum, auto
 
-#%% PARAMETERS
+
+#########
+# ENUMS #
+#########
+class ArmControlMode(Enum):
+    JOINT_CONTROL = auto()  # Joint by joint
+    IK_BASE_FRAME = auto()  # IK in the base frame
+
+
+##############
+# PARAMETERS #
+##############
+WORKING_FREQ = 10
 PI = 3.14159265358979323846
 LINK_LENGTH = 0.15
 CLAW_LENGTH = 0.05
@@ -27,7 +42,39 @@ class PlanarArm(rtb.DHRobot):
         super().__init__(PLANAR_DH, name="Mini Rover Arm")
 
 
-#%% EXAMPLE USAGE
+###################
+# XBOX PARAMETERS #
+###################
+# See http://wiki.ros.org/joy
+
+BUTTON_NAMES_IN_ORDER = [
+    "A",
+    "B",
+    "X",
+    "Y",
+    "L bumper",
+    "R bumper",
+    "back",
+    "start",
+    "power",  # xbox button
+    "L stick press",
+    "R stick press",
+]
+AXES_NAMES_IN_ORDER = [
+    "L stick LR",  # Moving stick left or right (left is positive)
+    "L stick UD",  # Moving stick up and down (up is positive)
+    "L trigger",
+    "R stick LR",
+    "R stick UD",
+    "R trigger",
+    "D pad LR",
+    "D pad UD",
+]
+
+
+#################
+# EXAMPLE USAGE #
+#################
 if __name__ == "__main__":
     # Print the arm parameters
     arm = PlanarArm()
