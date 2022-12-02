@@ -5,6 +5,10 @@
     <env name='ROSCONSOLE_FORMAT' value='(${node})[${severity}]: ${message}'/>
 
     <!-- Nodes -->
-    <node name="" pkg="" type="" />
+    <node name="Mode Manager" type="ModeManager.py" />
+    <node name="IK Controller" type="ModeManager.py" />
+    <node name="JBJ Controller" type="ModeManager.py" />
+    <node name="Simulation Manager" type="SimManager.py" />
+    <node name="Motor Manager" type="ModeManager.py" />
 
 </launch>
