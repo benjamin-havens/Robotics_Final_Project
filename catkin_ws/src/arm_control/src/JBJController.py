@@ -62,6 +62,9 @@ class JBJController:
         Handles changing the speed, laser and solenoid?, etc
             then passes to self.joint_by_joint to control the arm.
         """
+        if not self.xbox_msg.buttons:
+            return
+
         button_dict = {
             name: value
             for name, value in zip(p.BUTTON_NAMES_IN_ORDER, self.xbox_msg.buttons)
@@ -82,20 +85,20 @@ class JBJController:
         """
 
         # Handle node selection button.
-        if button_dict["D pad LR"] > 0.05:
+        if axes_dict["D pad LR"] > 0.05:
             self.selected_node = Controllable.NODE_1
             return
-        if button_dict["D pad UD"] > 0.05:
+        if axes_dict["D pad UD"] > 0.05:
             self.selected_node = Controllable.NODE_2
             return
-        if button_dict["D pad LR"] < -0.05:
+        if axes_dict["D pad LR"] < -0.05:
             self.selected_node = Controllable.NODE_3
             return
 
         # Triggers do motion. When triggers are unpressed, msg has value 1.
         #   The 0.95 margin allows for trigger noise
         # If both are pressed, do not move (hence the xor)
-        if button_dict["R trigger"] < 0.95 ^ button_dict["L trigger"] < 0.95:
+        if axes_dict["R trigger"] < 0.95 ^ axes_dict["L trigger"] < 0.95:
             # If they don't have anything selected, warn them
             if self.selected_node == Controllable.NONE_SELECTED:
                 rospy.logwarn(

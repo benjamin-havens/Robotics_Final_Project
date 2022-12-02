@@ -3,7 +3,7 @@
     name="model" />
   <param
     name="robot_description"
-    textfile="$(find RobotURDF.SLDASM)/urdf/RobotURDF.SLDASM.urdf" />
+    textfile="~/Robotics_Final_Project/RobotURDF/urdf/RobotURDF.SLDASM.urdf" />
   <node
     name="joint_state_publisher_gui"
     pkg="joint_state_publisher_gui"

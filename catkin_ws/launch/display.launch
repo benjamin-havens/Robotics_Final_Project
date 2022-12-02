@@ -1,0 +1,17 @@
+<launch>
+
+  <arg name="model" default="$(find urdf_tutorial)/urdf/01-myfirst.urdf"/>
+  <arg name="gui" default="false" />
+  <arg name="rvizconfig" default="/home/benjaminhavens/Robotics_Final_Project/RobotURDF/rvis/urdf.rviz" />
+
+  <param name="robot_description" textfile="/home/benjaminhavens/Robotics_Final_Project/RobotURDF/urdf/RobotURDF.SLDASM.urdf" />
+
+  <node if="$(arg gui)" name="joint_state_publisher" pkg="joint_state_publisher_gui" type="joint_state_publisher_gui" />
+  <node unless="$(arg gui)" name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
+       <rosparam param="source_list">["/joint_state"]</rosparam>
+  </node>
+  
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true" />
+
+</launch>
