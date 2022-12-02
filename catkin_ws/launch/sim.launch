@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+
+<launch>
+    <!-- Formatting -->
+    <env name='ROSCONSOLE_FORMAT' value='(${node})[${severity}]: ${message}'/>
+
+    <!-- Nodes -->
+    <node name="" pkg="" type="" />
+
+</launch>
