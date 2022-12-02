@@ -1,0 +1,11 @@
+Benjamin
+* Make ROS workspace
+* Xbox controller integrator
+* GUI
+* URDF Simulation
+
+Isaac/Joey
+* Grid, calibration
+* DLT in Python
+* Code for moving motors
+* Goal objects just below the claw level

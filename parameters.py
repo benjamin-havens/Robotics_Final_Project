@@ -1,6 +1,14 @@
+"""
+Contains the parameters for final project for ME 537, a simple planar arm.
+
+Isaac Shaw, Joey LeCheminant, and Benjamin Havens
+"""
+
+#%% IMPORTS
 import roboticstoolbox as rtb
 import matplotlib.pyplot as plt
 
+#%% PARAMETERS
 PI = 3.14159265358979323846
 LINK_LENGTH = 0.15
 CLAW_LENGTH = 0.05
@@ -19,6 +27,7 @@ class PlanarArm(rtb.DHRobot):
         super().__init__(PLANAR_DH, name="Mini Rover Arm")
 
 
+#%% EXAMPLE USAGE
 if __name__ == "__main__":
     # Print the arm parameters
     arm = PlanarArm()
@@ -42,3 +51,5 @@ if __name__ == "__main__":
     trajectory = arm.jtraj(T0, T1, t=200)  # use t steps
     fig_3 = plt.figure(3)
     arm.plot(trajectory.q, fig=fig_3, block=True)
+
+# %%
