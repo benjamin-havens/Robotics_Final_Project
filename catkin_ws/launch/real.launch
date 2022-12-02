@@ -4,6 +4,13 @@
     <!-- Formatting -->
     <env name='ROSCONSOLE_FORMAT' value='(${node})[${severity}]: ${message}'/>
 
+    <!-- Joystick input -->
+    <!-- You can rename value freely-->
+    <param name="joy_node_arm/dev" value="/dev/rover/js/xbox_360" />
+    <node name="joy_node_arm" pkg="joy" type="joy_node" output="screen">
+        <remap from="/joy" to="/xbox_arm"/>
+    </node>
+
     <!-- Nodes -->
     <node name= "Mode_Manager" pkg="arm_control" type="ModeManager.py" />
     <node name="IK_Controller" pkg="arm_control" type="IKController.py" />

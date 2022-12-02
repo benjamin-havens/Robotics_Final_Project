@@ -29,6 +29,8 @@ CENTER_ANGLE = 512  # Corresponds to 0 position
 HALF_RANGE = 308  # Corresponds to 90deg rotation
 QLIM_BOTTOM = CENTER_ANGLE - HALF_RANGE
 QLIM_TOP = CENTER_ANGLE + HALF_RANGE
+INITIAL_Q = [0, 0, 0]
+KD = 0.01
 
 
 def angle_to_cmd(angle, radians=False):
