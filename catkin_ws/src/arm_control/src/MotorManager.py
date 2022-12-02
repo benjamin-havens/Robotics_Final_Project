@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 """
 ROS node that connects to the hardware
 
