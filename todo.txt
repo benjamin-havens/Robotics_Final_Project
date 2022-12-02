@@ -1,11 +1,24 @@
 Benjamin
+Done:
+* Setup repo
 * Make ROS workspace
-* Xbox controller integrator
+* Parameters and basic simulation
+Todo:
+* Xbox controller integration
 * GUI
 * URDF Simulation
 
-Isaac/Joey
-* Grid, calibration
+Isaac
+Done:
+* Get motors
+* Get cameras
+Todo:
 * DLT in Python
+
+Joey
+Done:
+* Making physical arm
+Todo:
+* Grid, calibration
 * Code for moving motors
 * Goal objects just below the claw level
