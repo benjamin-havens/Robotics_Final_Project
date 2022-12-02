@@ -25,8 +25,8 @@ class ArmControlMode(Enum):
 ##############
 WORKING_FREQ = 10
 PI = 3.14159265358979323846
-LINK_LENGTH = 0.15
-CLAW_LENGTH = 0.05
+LINK_LENGTH = 0.15  # 15cm
+CLAW_LENGTH = 0.094
 
 PLANAR_DH = [
     rtb.RevoluteDH(a=LINK_LENGTH),
