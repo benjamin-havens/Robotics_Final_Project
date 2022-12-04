@@ -3,6 +3,21 @@ import numpy as np
 import os
 from numpy import matlib
 
+'''
+DLT class
+
+Takes in file paths to two images, a left and right view of a scene, and a number of points to use for calibration (defaults to 7).
+
+If the scene has never been calibrated, run the getCalibrationPoints method. This will open a window for each image, and allow you to click on the points to use for calibration. The points should be clicked in the same order in both images. Select a calibration point and then press space bar to confirm the choice. FIXME: add a marker to the selected point before confirming. You are then prompted to enter the physical xyz coordinates for the same points. The solveLR method is then called by the function and the calibration is complete.
+
+Running the getXYZ method will open a window for the left and right images. Select the same point in both images. Remember to press space after selecting the point in each image. The xyz coordinates of the point are then returned.
+
+If wanted, run the DLT_Save_To_File method to save the calibration data to a file. This will save the calibration data to a file corresponding to the names of the images used. This file can then be used to load the calibration data for future use with the DLT_Load_From_File method.
+
+The origin is at the bottom corner of the grid boards where all three meet with positive Z going up positive x on the left and positive y on the right as you look at the images. This means all objects are in the positive x, y, and z (octant 1) 
+
+'''
+
 class DLT:
 
     def __init__(self, left_img, right_img, numPoints = 7):
@@ -13,8 +28,8 @@ class DLT:
         self.vL = np.array([])
         self.uR = np.array([])
         self.vR = np.array([])
-        self.X = 1
-        self.Y = 1
+        self.X = -1
+        self.Y = -1
         self.calibrationPointsXYZ = np.zeros((self.numPoints, 3))     
 
     # Function to get uL, vL, uR, vR, calibrationPointsXYZ from a file
@@ -32,6 +47,7 @@ class DLT:
 
         # Close file
         f.close()
+        self.solveLR()
 
     # Function to save uL, vL, uR, vR, calibrationPointsXYZ to a file in a subfolder called DLT_Data with filename taken from the image file names
     def DLT_Save_To_File(self):
@@ -113,7 +129,9 @@ class DLT:
             self.calibrationPointsXYZ[i, 1] = y
             self.calibrationPointsXYZ[i, 2] = z
 
-    # Loads previously saved calibration points
+        self.solveLR()
+
+    # Loads previously saved calibration points if the numpy arrays are supplied.
     def loadCalibrationPoints(self, uL, vL, uR, vR, calibrationPointsXYZ):
         self.uL = uL
         self.vL = vL
@@ -215,8 +233,9 @@ class DLT:
 
 if __name__ == "__main__":
 
-    left = 'DLT/left.JPG'
-    right = 'DLT/right.JPG'
+    # ENTER FULL PATH TO IMAGES
+    left_path = '/Users/ikas/Documents/ME 537/Robotics_Final_Project/catkin_ws/src/DLT/left.JPG'
+    right_path = '/Users/ikas/Documents/ME 537/Robotics_Final_Project/catkin_ws/src/DLT/right.JPG'
 
     # Calibration data for provided images to test the code
     uL = np.array([1914,  539, 1781, 1423, 1271, 2028, 2184])
@@ -233,7 +252,7 @@ if __name__ == "__main__":
 
 
     # dltobj.calibrate()
-    dltobj = DLT(left, right)
+    dltobj = DLT(left_path, right_path)
     dltobj.loadCalibrationPoints(uL, vL, uR, vR, calibrationPointsXYZ)
     xyz = dltobj.getXYZ()
 
