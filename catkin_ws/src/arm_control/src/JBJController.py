@@ -106,8 +106,6 @@ class JBJController:
                     " Defaulting to node 1"
                 )
                 self.selected_node = Controllable.NODE_1
-            # Move the node (if we ever update to a newer python,
-            #   replace if chain with match statement)
             # TODO: move nodes
             # TODO: joint lims
 

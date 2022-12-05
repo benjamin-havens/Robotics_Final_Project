@@ -9,7 +9,6 @@ Its main job is to subscribe to the motor commands and update the joint position
 
 import parameters as p
 import rospy as ros
-import numpy as np
 from sensor_msgs.msg import JointState
 from control_msgs.msg import JointJog
 
@@ -31,6 +30,7 @@ class SimManager:
         self.motor_cmds = motor_cmds
 
     def update(self):
+        self.pos_pub.publish(self.joint_state)
         if self.motor_cmds is None:
             return
         self.joint_state.position = [d for d in self.motor_cmds.displacements]
