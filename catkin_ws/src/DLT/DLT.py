@@ -86,7 +86,7 @@ class DLT:
                 # Display calibration points
                 if len(self.uL) > 0:
                     for j in range(self.uL.shape[0]):
-                        cv2.circle(left, (int(self.uL[j]), int(self.vL[j])), 3, (255, 0, 0), -1)
+                        cv2.circle(left, (int(self.uL[j]), int(self.vL[j])), 5, (0, 0, 255), -1)
 
                 cv2.imshow("left", left)
 
@@ -98,18 +98,19 @@ class DLT:
                 self.uL = np.append(self.uL, self.X)
                 self.vL = np.append(self.vL, self.Y)
 
+                cv2.destroyWindow("left")
         #Do right image calibration points
         for i in range(self.numPoints):
 
                 right = cv2.imread(self.right)
-                cv2.putText(right, f"Select calibration point {i} on the right image then press a key to continue to the next point", (10, 10), cv2.FONT_HERSHEY_COMPLEX_SMALL, 0.5, (0, 0, 255), 1)
+                cv2.putText(right, f"Select calibration point {i} on the right image then press a key to continue to the next point", (10, 10), cv2.FONT_HERSHEY_COMPLEX_SMALL, 2, (0, 0, 255), 1)
                 cv2.imshow("right", right)
                 cv2.setMouseCallback("right", self.mousePoints)
 
                 # Display calibration points
                 if len(self.uR) > 0:
                     for j in range(self.uR.shape[0]):
-                        cv2.circle(right, (int(self.uR[j]), int(self.vR[j])), 3, (255, 0, 0), -1)
+                        cv2.circle(right, (int(self.uR[j]), int(self.vR[j])), 5, (0, 0, 255), -1)
 
                 cv2.imshow("right", right)
 
@@ -120,7 +121,11 @@ class DLT:
 
                 self.uR = np.append(self.uR, self.X)
                 self.vR = np.append(self.vR, self.Y)
+        
+                cv2.destroyWindow("right")
 
+        cv2.destroyAllWindows()
+        
         # Enter calibration points physical coordinates
         for i in range(self.numPoints):
             prompt = input(f"Enter in units of cm the X,Y,Z coordinates of calibration point {i} as X Y Z: ")
@@ -234,7 +239,7 @@ class DLT:
 if __name__ == "__main__":
 
     # ENTER FULL PATH TO IMAGES
-    left_path = '/Users/ikas/Documents/ME 537/Robotics_Final_Project/catkin_ws/src/DLT/left.JPG'
+    left_path = '/Users/ikas/Documents/ME 537/Robotics_Final_Project/catkin_ws/src/DLT/left.jpg'
     right_path = '/Users/ikas/Documents/ME 537/Robotics_Final_Project/catkin_ws/src/DLT/right.JPG'
 
     # Calibration data for provided images to test the code
@@ -252,8 +257,11 @@ if __name__ == "__main__":
 
 
     # dltobj.calibrate()
-    dltobj = DLT(left_path, right_path)
-    dltobj.loadCalibrationPoints(uL, vL, uR, vR, calibrationPointsXYZ)
+    dltobj = DLT(left_path, right_path, 10)
+    # dltobj.loadCalibrationPoints(uL, vL, uR, vR, calibrationPointsXYZ)
+
+    # dltobj.DLT_Load_From_File('/Users/ikas/Documents/ME 537/Robotics_Final_Project/DLT_Data/left_right.txt')
+    dltobj.getCalibrationPoints()
     xyz = dltobj.getXYZ()
 
 
