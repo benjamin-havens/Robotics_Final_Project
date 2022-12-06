@@ -13,6 +13,7 @@ from control_msgs.msg import JointJog
 from sensor_msgs.msg import JointState
 import parameters as p
 from Ax12 import Ax12
+import time
 
 
 class MotorManager:
@@ -36,16 +37,18 @@ class MotorManager:
         self.sub_cmds = rospy.Subscriber("/motor_commands", JointJog, self.save_cmds)
 
         # PUBLISHERS
-        self.pub_pos = rospy.Publisher("/joint_state", JointState, queue_size=1)
+        self.pub_pos_rad = rospy.Publisher("/joint_state_rad", JointState, queue_size=1)
+        self.pub_pos_inc = rospy.Publisher("/joint_state_inc", JointState, queue_size=1)
 
         self.reset_position()
+        time.sleep(1.0)
 
     def reset_position(self):
         self.last_cmds = [p.angle_to_cmd(d) for d in [0, 0, 0]]
         self.send_cmds()
 
     def save_cmds(self, motor_cmd_msg):
-        self.last_cmds = [p.angle_to_cmd(d) for d in motor_cmd_msg.displacements]
+        self.last_cmds = [int(d) for d in motor_cmd_msg.displacements]
 
     def send_cmds(self):
         if self.last_cmds is None:
@@ -55,8 +58,10 @@ class MotorManager:
 
     def update_positions(self):
         msg = JointState()
-        msg.position = [p.cmd_to_angle(m.get_present_position()) for m in self.motors]
-        self.pub_pos.publish(msg)
+        msg.position = [int(m.get_present_position()) for m in self.motors]
+        self.pub_pos_inc.publish(msg)
+        msg.position = [p.cmd_to_angle(d) for d in msg.position]
+        self.pub_pos_rad.publish(msg)
 
     def disconnect(self):
         [m.set_torque_enable(0) for m in self.motors]

@@ -24,7 +24,7 @@ class ArmControlMode(Enum):
 ##########
 # SPEEDS #
 ##########
-JBJ_SPEEDS = [0.05, 0.1, 0.2]
+JBJ_SPEEDS = [4, 8, 16]
 IK_SPEEDS = [0.005, 0.01, 0.02]
 STARTING_SPEED_IDX = 1
 
@@ -32,7 +32,7 @@ STARTING_SPEED_IDX = 1
 #################
 # MISCELLANEOUS #
 #################
-WORKING_FREQ = 50  # hz
+WORKING_FREQ = 20  # hz
 CENTER_ANGLE = 512  # Corresponds to 0 position
 HALF_RANGE = 308  # Corresponds to 90deg rotation
 QLIM_BOTTOM = CENTER_ANGLE - HALF_RANGE

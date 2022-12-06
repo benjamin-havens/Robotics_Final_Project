@@ -39,7 +39,9 @@ class JBJController:
 
         # SUBSCRIBERS
         self.sub_joy = rospy.Subscriber("/xbox_jointbyjoint", Joy, self.save_xbox_msg)
-        self.sub_pos = rospy.Subscriber("/joint_state", JointState, self.update_pos)
+        self.sub_pos_inc = rospy.Subscriber(
+            "/joint_state_inc", JointState, self.update_pos
+        )
 
         # PUBLISHERS
         self.pub_commands = rospy.Publisher("/motor_commands", JointJog, queue_size=1)
@@ -108,7 +110,7 @@ class JBJController:
                 )
                 self.selected_node = Controllable.NODE_1
 
-            direction_to_move = 1 if axes_dict["R trigger"] < 0.9 else -1
+            direction_to_move = -1 if axes_dict["R trigger"] < 0.9 else 1
             move_by = p.JBJ_SPEEDS[self.speed_idx] * direction_to_move
 
             displacements = list(self.joints.position)
