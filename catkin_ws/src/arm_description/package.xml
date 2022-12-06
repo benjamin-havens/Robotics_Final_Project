@@ -1,5 +1,5 @@
 <package format="2">
-  <name>RobotURDF.SLDASM</name>
+  <name>arm_description</name>
   <version>1.0.0</version>
   <description>
     <p>URDF Description package for RobotURDF.SLDASM</p>
