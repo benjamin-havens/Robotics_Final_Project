@@ -99,7 +99,7 @@ class JBJController:
         # Triggers do motion. When triggers are unpressed, msg has value 1.
         #   The 0.95 margin allows for trigger noise
         # If both are pressed, do not move (hence the xor)
-        if (axes_dict["R trigger"] < 0.95) ^ (axes_dict["L trigger"] < 0.95):
+        if (axes_dict["R trigger"] < 0.9) ^ (axes_dict["L trigger"] < 0.9):
             # If they don't have anything selected, warn them
             if self.selected_node == Controllable.NONE_SELECTED:
                 rospy.logwarn(
@@ -108,7 +108,7 @@ class JBJController:
                 )
                 self.selected_node = Controllable.NODE_1
 
-            direction_to_move = 1 if axes_dict["R trigger"] < 0.95 else -1
+            direction_to_move = 1 if axes_dict["R trigger"] < 0.9 else -1
             move_by = p.JBJ_SPEEDS[self.speed_idx] * direction_to_move
 
             displacements = list(self.joints.position)

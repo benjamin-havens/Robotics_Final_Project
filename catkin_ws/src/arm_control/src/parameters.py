@@ -32,7 +32,7 @@ STARTING_SPEED_IDX = 1
 #################
 # MISCELLANEOUS #
 #################
-WORKING_FREQ = 10  # hz
+WORKING_FREQ = 50  # hz
 CENTER_ANGLE = 512  # Corresponds to 0 position
 HALF_RANGE = 308  # Corresponds to 90deg rotation
 QLIM_BOTTOM = CENTER_ANGLE - HALF_RANGE
@@ -41,13 +41,13 @@ INITIAL_Q = [0, 0, 0]
 KD = 0.01
 
 
-def angle_to_cmd(angle, radians=False):
+def angle_to_cmd(angle, radians=True):
     if radians:
         angle *= 180 / pi
     return int(CENTER_ANGLE + (HALF_RANGE / 90) * angle)
 
 
-def cmd_to_angle(cmd, radians=False):
+def cmd_to_angle(cmd, radians=True):
     angle = float((cmd - CENTER_ANGLE) * 90 / HALF_RANGE)
     if radians:
         angle *= pi / 180

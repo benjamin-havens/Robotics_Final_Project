@@ -92,6 +92,10 @@ class IKController:
         # Returns tuple(q, success, iterations, searches, residual)
         ik_res = self.arm_dh_model.ik_gn(des_ee, q0=q_current)
 
+        # If that didn't work, we're probably outside the workspace. Try again with more tolerance
+        if not ik_res[1]:
+            ik_res = self.arm_dh_model.ik_gn(des_ee, q0=q_current, tol=speed_scale)
+
         # Construct message and scale by speed
         msg = JointJog()
         msg.displacements = list(ik_res[0])

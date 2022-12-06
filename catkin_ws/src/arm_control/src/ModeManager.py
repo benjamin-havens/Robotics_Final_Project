@@ -17,7 +17,7 @@ class ModeManager:
     def __init__(self):
         # State variables
         self.xbox_msg = Joy()
-        self.mode = p.ArmControlMode.IK_BASE_FRAME
+        self.mode = p.ArmControlMode.JOINT_CONTROL
 
         # SUBSCRIBERS
         self.sub_xbox = rospy.Subscriber("/xbox_arm", Joy, self.xbox_callback)
