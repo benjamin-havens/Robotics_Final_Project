@@ -38,7 +38,7 @@ class ModeManager:
         """
 
         # If no message received yet
-        if not self.xbox_msg.buttons:
+        if self.xbox_msg is None or not self.xbox_msg.buttons:
             return
 
         button_dict = {
@@ -81,6 +81,7 @@ class ModeManager:
             self.pub_IK.publish(self.xbox_msg)
         else:
             raise ValueError(f"Unknown/unimplemented mode {self.mode}.")
+        self.xbox_msg = Joy()
 
 
 if __name__ == "__main__":

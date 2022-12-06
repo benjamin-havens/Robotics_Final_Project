@@ -18,7 +18,6 @@
     <node name= "Mode_Manager" pkg="arm_control" type="ModeManager.py" />
     <node name="IK_Controller" pkg="arm_control" type="IKController.py" />
     <node name="JBJ_Controller" pkg="arm_control" type="JBJController.py" />
-    <!-- <node name="Simulation_Manager" pkg="arm_control" type="SimManager.py" /> -->
     <node name="Motor_Manager" pkg="arm_control" type="MotorManager.py" />
 
 </launch>

@@ -32,7 +32,7 @@ class IKController:
 
         # SUBSCRIBERS
         self.sub_joy = rospy.Subscriber("/xbox_IK", Joy, self.save_xbox_msg)
-        self.sub_pos = rospy.Subscriber("/joint_state", JointState, self.update_pos)
+        self.sub_pos = rospy.Subscriber("/joint_state_inc", JointState, self.update_pos)
 
         # PUBLISHERS
         self.pub_commands = rospy.Publisher("/motor_commands", JointJog, queue_size=1)
@@ -70,6 +70,7 @@ class IKController:
         # TODO speeds
 
         self.IK_with_xbox(button_dict, axes_dict)
+        self.xbox_msg = Joy()
 
     def IK_with_xbox(self, button_dict, axes_dict):
         """
@@ -80,28 +81,82 @@ class IKController:
         speed_scale = p.IK_SPEEDS[self.speed_idx]
 
         # Note: ee == end_effector in these variable names
-        q_current = array([self.joints.position])
+        q_current = array([p.cmd_to_angle(d) for d in self.joints.position])
         ee_current = self.arm_dh_model.fkine(q_current).t
+
+        rospy.logwarn(f"Currently at \nq: {q_current}\nee: {ee_current}.")
+
         des_x = ee_current[0] + speed_scale * axes_dict["L stick UD"]
         des_y = ee_current[1] - speed_scale * axes_dict["L stick LR"]
         des_z = ee_current[2] + speed_scale * axes_dict["R stick UD"]
 
-        des_ee = array([des_x, des_y, des_z])
+        des_ee = array([des_x, des_y, des_z, 0, 0, 0])
+        rospy.logwarn(f"Trying to get to \nee: {des_ee}.")
 
         # Use robotics toolbox IK method
         # Returns tuple(q, success, iterations, searches, residual)
-        ik_res = self.arm_dh_model.ik_gn(des_ee, q0=q_current)
+        ik_res = self.arm_dh_model.ik_gn(des_ee, we=[1] * 3 + [0] * 3)
 
         # If that didn't work, we're probably outside the workspace. Try again with more tolerance
         if not ik_res[1]:
-            ik_res = self.arm_dh_model.ik_gn(des_ee, q0=q_current, tol=speed_scale)
+            rospy.logwarn("Failed to find IK sol")
+            rospy.logwarn(ik_res)
+            ik_res = self.arm_dh_model.ik_gn(
+                des_ee, tol=speed_scale * 2, we=[1] * 3 + [0] * 3
+            )
+            if not ik_res[1]:
+                rospy.logwarn("Failed to find IK sol again")
+                rospy.logwarn(str(ik_res) + "\n\n")
 
         # Construct message and scale by speed
         msg = JointJog()
-        msg.displacements = list(ik_res[0])
+        msg.displacements = list(int(p.angle_to_cmd(d)) for d in ik_res[0])
 
         # Publish the commands
         self.pub_commands.publish(msg)
+
+    def IK_base_frame(self, button_dict, axes_dict):
+        """
+        Handles controls other than moving speed or resetting positions.
+        Passing in the button_dict and axes_dict from process_msg avoids redundant code.
+        """
+
+        # Note: ee == end_effector in these variable names
+        des_x_vel = axes_dict["L stick LR"]
+        des_y_vel = axes_dict["L stick UD"]
+        des_z_vel = axes_dict["R stick UD"]
+
+        des_ee_twist = array(
+            [[des_x_vel], [des_y_vel], [des_z_vel], [0.0], [0.0], [0.0]]
+        )
+
+        q_current = array([[p] for p in self.joints.position])
+
+        # Do the IK with the pseudoinverse method
+        qdot = self.get_qdot(q_current[1:], des_ee_twist)
+
+        # Construct message and scale by speed
+        msg = JointJog()
+        msg.displacements = list(int(p.angle_to_cmd(d)) for d in ik_res[0])
+
+        # Publish the commands
+        self.pub_commands.publish(msg)
+
+        # Publish
+        self.pub_commands.publish(self.last_command)
+
+    def get_qdot(self, q_current, des_twist):
+        """
+        For a given configuration q_current and desired twist,
+            return the new joint positions and joint velocities
+            to move the end effector in the desired direction.
+        """
+        # psuedo-inverse method
+        J = self.arm_dh_model.jacob0(q_current)
+        J_sword = J.T @ inv(J @ J.T + p.KD**2 * eye(len(J)))
+        qdot_des = J_sword @ des_twist
+
+        return qdot_des
 
 
 if __name__ == "__main__":

@@ -58,7 +58,7 @@ class JBJController:
         Upon receiving a joint position measured by the Hall effect sensors
         internal to the motors, uses this as new estimate of joint positions
         """
-        self.joints.position = measured_joint_pos.position
+        self.joints.position = [int(d) for d in measured_joint_pos.position]
 
     def process_msg(self):
         """
@@ -76,6 +76,8 @@ class JBJController:
             name: value
             for name, value in zip(p.AXES_NAMES_IN_ORDER, self.xbox_msg.axes)
         }  # Here in case needed in future but not used now
+
+        # TODO: speeds
 
         self.joint_by_joint(button_dict, axes_dict)
 
@@ -101,7 +103,9 @@ class JBJController:
         # Triggers do motion. When triggers are unpressed, msg has value 1.
         #   The 0.95 margin allows for trigger noise
         # If both are pressed, do not move (hence the xor)
-        if (axes_dict["R trigger"] < 0.9) ^ (axes_dict["L trigger"] < 0.9):
+        if (axes_dict["R trigger"] != 0.0 and axes_dict["R trigger"] < 0.9) ^ (
+            axes_dict["L trigger"] != 0.0 and axes_dict["L trigger"] < 0.9
+        ):
             # If they don't have anything selected, warn them
             if self.selected_node == Controllable.NONE_SELECTED:
                 rospy.logwarn(
@@ -111,6 +115,9 @@ class JBJController:
                 self.selected_node = Controllable.NODE_1
 
             direction_to_move = -1 if axes_dict["R trigger"] < 0.9 else 1
+            # Node 3 moves up with RT
+            if self.selected_node == Controllable.NODE_3:
+                direction_to_move *= -1
             move_by = p.JBJ_SPEEDS[self.speed_idx] * direction_to_move
 
             displacements = list(self.joints.position)

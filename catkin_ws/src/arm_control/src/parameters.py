@@ -25,7 +25,7 @@ class ArmControlMode(Enum):
 # SPEEDS #
 ##########
 JBJ_SPEEDS = [4, 8, 16]
-IK_SPEEDS = [0.005, 0.01, 0.02]
+IK_SPEEDS = [0.01, 0.02, 0.04]
 STARTING_SPEED_IDX = 1
 
 
