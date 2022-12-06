@@ -32,7 +32,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://urdf/meshes/base_link.STL" />
+          filename="package://arm_description/meshes/base_link.STL" />
       </geometry>
       <material
         name="">
@@ -46,7 +46,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://urdf/meshes/base_link.STL" />
+          filename="package://arm_description/meshes/base_link.STL" />
       </geometry>
     </collision>
   </link>
@@ -72,7 +72,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://urdf/meshes/link_1.STL" />
+          filename="package://arm_description/meshes/link_1.STL" />
       </geometry>
       <material
         name="">
@@ -86,7 +86,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://urdf/meshes/link_1.STL" />
+          filename="package://arm_description/meshes/link_1.STL" />
       </geometry>
     </collision>
   </link>
@@ -130,7 +130,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://urdf/meshes/link_2.STL" />
+          filename="package://arm_description/meshes/link_2.STL" />
       </geometry>
       <material
         name="">
@@ -144,7 +144,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://urdf/meshes/link_2.STL" />
+          filename="package://arm_description/meshes/link_2.STL" />
       </geometry>
     </collision>
   </link>
@@ -188,7 +188,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://urdf/meshes/link_3.STL" />
+          filename="package://arm_description/meshes/link_3.STL" />
       </geometry>
       <material
         name="">
@@ -202,7 +202,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://urdf/meshes/link_3.STL" />
+          filename="package://arm_description/meshes/link_3.STL" />
       </geometry>
     </collision>
   </link>
