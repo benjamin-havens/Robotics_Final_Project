@@ -362,34 +362,31 @@ class DLT:
 if __name__ == "__main__":
 
     # ENTER FULL PATH TO IMAGES
-    left_path = (
-        "/Users/ikas/Documents/ME 537/Robotics_Final_Project/catkin_ws/src/DLT/left.jpg"
-    )
-    right_path = "/Users/ikas/Documents/ME 537/Robotics_Final_Project/catkin_ws/src/DLT/right.JPG"
+    left_path = '/Users/ikas/Documents/ME 537/Robotics_Final_Project/catkin_ws/src/DLT/left_with_robot.jpg'
+    right_path = '/Users/ikas/Documents/ME 537/Robotics_Final_Project/catkin_ws/src/DLT/right_with_robot.JPG'
 
     # Calibration data for provided images to test the code
-    uL = np.array([1914, 539, 1781, 1423, 1271, 2028, 2184])
-    vL = np.array([654, 360, 1947, 1082, 1564, 1333, 2069])
-    uR = np.array([1528, 285, 801, 1009, 664, 1428, 1428])
-    vR = np.array([636, 314, 1734, 984, 1353, 1303, 1303])
-    calibrationPointsXYZ = np.array(
-        [
-            [0, 9, 9],
-            [12.5, 0, 13.5],
-            [12.5, 14, 0],
-            [5.5, 5.5, 4.8],
-            [11.5, 7.5, 1.7],
-            [3.5, 12.5, 2.4],
-            [13, 18, 0.75],
-        ]
-    )
+    # uL = np.array([1914,  539, 1781, 1423, 1271, 2028, 2184])
+    # vL = np.array([ 654,  360, 1947, 1082, 1564, 1333, 2069])
+    # uR = np.array([1528,  285,  801, 1009,  664, 1428, 1428])
+    # vR = np.array([ 636,  314, 1734,  984, 1353, 1303, 1303])
+    # calibrationPointsXYZ = np.array([[0, 9, 9],
+    #                                 [12.5, 0, 13.5],
+    #                                 [12.5, 14, 0],
+    #                                 [5.5, 5.5, 4.8],
+    #                                 [11.5, 7.5, 1.7],
+    #                                 [3.5, 12.5, 2.4],
+    #                                 [13, 18, .75]])
+
+    
+
 
     # dltobj.calibrate()
     dltobj = DLT(left_path, right_path, 10)
     # dltobj.loadCalibrationPoints(uL, vL, uR, vR, calibrationPointsXYZ)
 
-    # dltobj.DLT_Load_From_File('/Users/ikas/Documents/ME 537/Robotics_Final_Project/DLT_Data/left_right.txt')
-    dltobj.getCalibrationPoints()
+    dltobj.DLT_Load_From_File('/Users/ikas/Documents/ME 537/Robotics_Final_Project/DLT_Data/left_with_robot_right_with_robot.txt')
+    # dltobj.getCalibrationPoints()
     xyz = dltobj.getXYZ()
 
     # dltobj.DLT_Save_To_File()
