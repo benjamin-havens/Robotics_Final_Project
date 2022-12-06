@@ -8,7 +8,9 @@ Its main job is to subscribe to the motor commands and update the joint position
 """
 
 import parameters as p
-import rospy as ros
+import numpy as np
+import rospy
+import roboticstoolbox as rtb
 from sensor_msgs.msg import JointState
 from control_msgs.msg import JointJog
 
@@ -18,32 +20,38 @@ class SimManager:
         self.motor_cmds = None
         self.joint_state = JointState()
         self.joint_state.position = p.INITIAL_Q
+        # self.plot = rtb.backends.PyPlot.PyPlot()
+        # self.plot.launch()
+        # self.robot = p.PlanarArm()
+        # self.plot.add(self.robot)
+        # self.robot.q = np.array(p.INITIAL_Q)
 
         # SUBSCRIBERS
-        self.cmd_sub = ros.Subscriber("/motor_commands", JointJog, self.save_cmds)
+        self.cmd_sub = rospy.Subscriber("/motor_commands", JointJog, self.save_cmds)
 
         # PUBLISHERS
-        self.pos_pub = ros.Publisher("/joint_state", JointState, queue_size=1)
+        self.pos_pub = rospy.Publisher("/joint_state", JointState, queue_size=1)
         self.pos_pub.publish(self.joint_state)
 
     def save_cmds(self, motor_cmds):
         self.motor_cmds = motor_cmds
 
     def update(self):
+        # TODO jointlims
+        if self.motor_cmds is not None:
+            self.joint_state.position = [d for d in self.motor_cmds.displacements]
         self.pos_pub.publish(self.joint_state)
-        if self.motor_cmds is None:
-            return
-        self.joint_state.position = [d for d in self.motor_cmds.displacements]
-        self.pos_pub.publish(self.joint_state)
+        # self.robot.q = np.array(self.joint_state.position)
+        # self.plot.step(dt=0.001)
         self.motor_cmds = None
 
 
 if __name__ == "__main__":
-    ros.init_node("Simulation Manager")
-    rate = ros.Rate(p.WORKING_FREQ)
+    rospy.init_node("Simulation Manager")
+    rate = rospy.Rate(p.WORKING_FREQ)
     manager = SimManager()
 
-    while not ros.is_shutdown():
+    while not rospy.is_shutdown():
         manager.update()
 
         rate.sleep()

@@ -14,7 +14,7 @@
     name="base_link">
     <inertial>
       <origin
-        xyz="-0.046982 0.0003924 -0.084365"
+        xyz="0.0 0.0 0.0"
         rpy="0 0 0" />
       <mass
         value="0.22451" />
@@ -28,8 +28,8 @@
     </inertial>
     <visual>
       <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
+        xyz="-0.15 -0.15 0.1"
+        rpy="-1.57079632679 0 0" />
       <geometry>
         <mesh
           filename="package://arm_description/meshes/base_link.STL" />
@@ -54,7 +54,7 @@
     name="link_1">
     <inertial>
       <origin
-        xyz="0.064267 -5.2794E-08 -0.002732"
+        xyz="0.0 0.0 0.0"
         rpy="0 0 0" />
       <mass
         value="0.031709" />
@@ -69,7 +69,7 @@
     <visual>
       <origin
         xyz="0 0 0"
-        rpy="0 0 0" />
+        rpy="3.14159265359 0 0" />
       <geometry>
         <mesh
           filename="package://arm_description/meshes/link_1.STL" />
@@ -112,7 +112,7 @@
     name="link_2">
     <inertial>
       <origin
-        xyz="0.068294 0.00064407 -0.0033292"
+        xyz="0.0 0.0 0.0"
         rpy="0 0 0" />
       <mass
         value="0.035007" />
@@ -170,7 +170,7 @@
     name="link_3">
     <inertial>
       <origin
-        xyz="0.043073 5.7658E-07 8.3473E-10"
+        xyz="0.0 0.0 0.0"
         rpy="0 0 0" />
       <mass
         value="0.028941" />

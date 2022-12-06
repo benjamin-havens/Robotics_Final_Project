@@ -21,6 +21,14 @@ class ArmControlMode(Enum):
     IK_BASE_FRAME = auto()  # IK in the base frame
 
 
+##########
+# SPEEDS #
+##########
+JBJ_SPEEDS = [0.05, 0.1, 0.2]
+IK_SPEEDS = [0.005, 0.01, 0.02]
+STARTING_SPEED_IDX = 1
+
+
 #################
 # MISCELLANEOUS #
 #################
@@ -88,7 +96,7 @@ BUTTON_NAMES_IN_ORDER = [
     "back",
     "start",
     "power",  # xbox button
-    "L stick press",
+    "L stick press",  # Pressing the stick in like a button
     "R stick press",
 ]
 AXES_NAMES_IN_ORDER = [

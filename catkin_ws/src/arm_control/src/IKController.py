@@ -22,6 +22,7 @@ class IKController:
         # State variables
         self.xbox_msg = Joy()
         self.joints = JointState()
+        self.speed_idx = p.STARTING_SPEED_IDX
 
         # Arm DH model for IK
         self.arm_dh_model = p.PlanarArm()
@@ -66,52 +67,37 @@ class IKController:
             for name, value in zip(p.AXES_NAMES_IN_ORDER, self.xbox_msg.axes)
         }  # Here in case needed in future but not used now
 
-        self.IK_base_frame(button_dict, axes_dict)
+        # TODO speeds
 
-    def IK_base_frame(self, button_dict, axes_dict):
+        self.IK_with_xbox(button_dict, axes_dict)
+
+    def IK_with_xbox(self, button_dict, axes_dict):
         """
         Handles controls other than moving speed or resetting positions.
         Passing in the button_dict and axes_dict from process_msg avoids redundant code.
         """
 
+        speed_scale = p.IK_SPEEDS[self.speed_idx]
+
         # Note: ee == end_effector in these variable names
-        des_y_vel = axes_dict["LR Left Stick"]
-        des_x_vel = axes_dict["UD Left Stick"]
-        des_z_vel = 0.0
+        q_current = array([self.joints.position])
+        ee_current = self.arm_dh_model.fkine(q_current).t
+        des_x = ee_current[0] + speed_scale * axes_dict["L stick UD"]
+        des_y = ee_current[1] - speed_scale * axes_dict["L stick LR"]
+        des_z = ee_current[2] + speed_scale * axes_dict["R stick UD"]
 
-        des_ee_twist = array(
-            [[des_x_vel], [des_y_vel], [des_z_vel], [0.0], [0.0], [0.0]]
-        )
+        des_ee = array([des_x, des_y, des_z])
 
-        q_current = array([[p] for p in self.joints.position])
-
-        # Do the IK with the pseudoinverse method
-        qdot = self.get_qdot(q_current, des_ee_twist)
+        # Use robotics toolbox IK method
+        # Returns tuple(q, success, iterations, searches, residual)
+        ik_res = self.arm_dh_model.ik_gn(des_ee, q0=q_current)
 
         # Construct message and scale by speed
         msg = JointJog()
-        speed_scale = p.SPEED
-        qdot *= speed_scale
-        msg.velocities = qdot[:, 0]
+        msg.displacements = list(ik_res[0])
 
         # Publish the commands
         self.pub_commands.publish(msg)
-
-    def get_qdot(self, q_current, des_twist):
-        """
-        For a given configuration q_current and desired twist,
-            return the new joint positions and joint velocities
-            to move the end effector in the desired direction.
-        """
-        # psuedo-inverse method
-        J = self.arm_dh_model.jacob0(q_current)
-        J_sword = J.T @ inv(J @ J.T + p.KD**2 * eye(len(J)))
-
-        # TODO: enforce joint limits
-
-        qdot_des = J_sword @ des_twist
-
-        return qdot_des
 
 
 if __name__ == "__main__":

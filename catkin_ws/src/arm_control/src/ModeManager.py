@@ -8,6 +8,7 @@ the message to either the IK node or the joint by joint node.
 """
 
 import rospy
+import time
 from sensor_msgs.msg import Joy
 import parameters as p
 
@@ -50,20 +51,22 @@ class ModeManager:
         }  # Here in case needed in future but not used now
 
         # Some buttons do different things in IK mode vs Joint by Joint
-        if self.state.mode == p.ArmControlMode.IK_BASE_FRAME:
+        if self.mode == p.ArmControlMode.IK_BASE_FRAME:
 
             # XBOX button switches to joint control
             if button_dict["power"]:
-                manager.state.mode = p.ArmControlMode.JOINT_CONTROL
+                manager.mode = p.ArmControlMode.JOINT_CONTROL
                 print("Joint by Joint Control Initiated")
+                time.sleep(0.25)
                 return
 
-        elif self.state.mode == p.ArmControlMode.JOINT_CONTROL:
+        elif self.mode == p.ArmControlMode.JOINT_CONTROL:
 
             # XBOX button switches to IK
             if button_dict["power"]:
-                manager.state.mode = p.ArmControlMode.IK_BASE_FRAME
+                manager.mode = p.ArmControlMode.IK_BASE_FRAME
                 print("IK Base Control Initiated")
+                time.sleep(0.25)
                 return
 
         else:
