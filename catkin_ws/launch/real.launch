@@ -5,7 +5,7 @@
     <env name='ROSCONSOLE_FORMAT' value='(${node})[${severity}]: ${message}'/>
 
     <!-- Viz file -->
-    <include file="/home/benjaminhavens/Robotics_Final_Project/catkin_ws/launch/display.launch"/>
+    <include file="$(find arm_control)/../../launch/display.launch"/>
 
     <!-- Joystick input -->
     <!-- You can rename value freely-->
