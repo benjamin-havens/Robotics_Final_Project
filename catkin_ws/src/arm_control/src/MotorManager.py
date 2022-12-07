@@ -70,7 +70,7 @@ class MotorManager:
 
 if __name__ == "__main__":
     rospy.init_node("Motor Manager")
-    rate = rospy.Rate(p.WORKING_FREQ)
+    rate = rospy.Rate(5 * p.WORKING_FREQ)
     manager = MotorManager()
 
     while not rospy.is_shutdown():

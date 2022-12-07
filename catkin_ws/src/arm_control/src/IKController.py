@@ -70,7 +70,6 @@ class IKController:
         # TODO speeds
 
         self.IK_with_xbox(button_dict, axes_dict)
-        self.xbox_msg = Joy()
 
     def IK_with_xbox(self, button_dict, axes_dict):
         """
@@ -82,31 +81,33 @@ class IKController:
 
         # Note: ee == end_effector in these variable names
         q_current = array([p.cmd_to_angle(d) for d in self.joints.position])
-        ee_current = self.arm_dh_model.fkine(q_current).t
+        ee_current = self.arm_dh_model.fkine(q_current)
 
-        rospy.logwarn(f"Currently at \nq: {q_current}\nee: {ee_current}.")
+        # rospy.logwarn(f"Currently at \nq: {q_current}\nee: {ee_current}.")
 
-        des_x = ee_current[0] + speed_scale * axes_dict["L stick UD"]
-        des_y = ee_current[1] - speed_scale * axes_dict["L stick LR"]
-        des_z = ee_current[2] + speed_scale * axes_dict["R stick UD"]
+        # Plot transforms in RVIZ for this to make sense.
+        delta_x = speed_scale * axes_dict["L stick UD"]
+        delta_y = speed_scale * axes_dict["L stick LR"]
+        delta_z = speed_scale * axes_dict["R stick UD"]
 
-        des_ee = array([des_x, des_y, des_z, 0, 0, 0])
-        rospy.logwarn(f"Trying to get to \nee: {des_ee}.")
+        des_ee = ee_current
+        for i, delta in enumerate([delta_x, delta_y, delta_z]):
+            des_ee.t[i] += delta
+        # rospy.logwarn(f"Trying to get to \nee: {des_ee}.")
 
         # Use robotics toolbox IK method
-        # Returns tuple(q, success, iterations, searches, residual)
-        ik_res = self.arm_dh_model.ikine_LMS(des_ee, we=[1] * 3 + [0] * 3)
+        # Returns tuple(q, success, reason, iterations, residual)
+        ik_res = self.arm_dh_model.ikine_LMS(des_ee, tol=1e-5, mask=[1, 1, 1, 0, 0, 0])
 
-        # If that didn't work, we're probably outside the workspace. Try again with more tolerance
         if not ik_res[1]:
-            rospy.logwarn("Failed to find IK sol")
+            rospy.logwarn(f"Failed to find IK sol with tol={1e-5}")
             rospy.logwarn(ik_res)
-            ik_res = self.arm_dh_model.ikine_LMS(
-                des_ee, tol=speed_scale * 2, we=[1] * 3 + [0] * 3
-            )
-            if not ik_res[1]:
-                rospy.logwarn("Failed to find IK sol again")
-                rospy.logwarn(str(ik_res) + "\n\n")
+            # ik_res = self.arm_dh_model.ikine_LMS(
+            #     des_ee, tol=1e-2, mask=[1, 1, 1, 0, 0, 0]
+            # )
+            # if not ik_res[1]:
+            #     rospy.logwarn(f"Failed to find IK sol again with tol={1e-2}")
+            #     rospy.logwarn(str(ik_res) + "\n\n")
 
         # Construct message and scale by speed
         msg = JointJog()
