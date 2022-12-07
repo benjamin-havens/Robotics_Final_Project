@@ -276,6 +276,131 @@ class DLT:
         self.L = np.linalg.solve(self.FL.conj().T @ self.FL, self.FL.conj().T @ self.gL)
         self.R = np.linalg.solve(self.FR.conj().T @ self.FR, self.FR.conj().T @ self.gR)
 
+    # Shows left and right images with calibration points and their calculated coordinates
+    def showCalibrationPoints(self):
+
+        # Do left image calibration points
+        for i in range(self.numPoints):
+
+            left = cv2.imread(self.left)
+            cv2.imshow("left", left)
+            cv2.setMouseCallback("left", self.mousePoints)
+
+            for j in range(self.uL.shape[0]):
+                cv2.circle(
+                    left, (int(self.uL[j]), int(self.vL[j])), 5, (0, 0, 255), -1
+                )
+                xyz =self.calcXYZBasedOnPixels(self.uL[j], self.vL[j], self.uR[j], self.vR[j]).reshape(3,1)
+                x = round(xyz[0][0]* 2.54,3)
+                y = round(xyz[1][0] * 2.54, 3)
+                z = round(xyz[2][0] * 2.54, 3)
+                xr = self.calibrationPointsXYZ[j][0] * 2.54
+                yr = self.calibrationPointsXYZ[j][1] * 2.54
+                zr = self.calibrationPointsXYZ[j][2] * 2.54
+                cv2.putText(
+                left,
+                f"{x, y, z}",
+                (int(self.uL[j]) + 10, int(self.vL[j])),
+                cv2.FONT_HERSHEY_DUPLEX,
+                .9,
+                (93, 46, 0),
+                2,
+                )
+                cv2.putText(
+                left,
+                f"{xr, yr, zr}",
+                (int(self.uL[j]) + 10, int(self.vL[j])+30),
+                cv2.FONT_HERSHEY_DUPLEX,
+                .9,
+                (93, 46, 0),
+                2,
+            )
+
+            cv2.imshow("left", left)
+
+        # Do right image calibration points
+        for i in range(self.numPoints):
+
+            right = cv2.imread(self.right)
+            cv2.imshow("right", right)
+            cv2.setMouseCallback("right", self.mousePoints)
+
+            for j in range(self.uL.shape[0]):
+                cv2.circle(
+                    right, (int(self.uR[j]), int(self.vR[j])), 5, (0, 0, 255), -1
+                )
+                xyz =self.calcXYZBasedOnPixels(self.uL[j], self.vL[j], self.uR[j], self.vR[j]).reshape(3,1)
+                x = round(xyz[0][0]* 2.54,3)
+                y = round(xyz[1][0] * 2.54, 3)
+                z = round(xyz[2][0] * 2.54, 3)
+                xr = self.calibrationPointsXYZ[j][0] * 2.54
+                yr = self.calibrationPointsXYZ[j][1] * 2.54
+                zr = self.calibrationPointsXYZ[j][2] * 2.54
+                # print(x,y,z)
+                cv2.putText(
+                right,
+                f"{x, y, z}",
+                (int(self.uR[j]) + 10, int(self.vR[j])),
+                cv2.FONT_HERSHEY_DUPLEX,
+                .9,
+                (93, 46, 0),
+                2,
+            )
+                cv2.putText(
+                right,
+                f"{xr, yr, zr}",
+                (int(self.uR[j]) + 10, int(self.vR[j])+30),
+                cv2.FONT_HERSHEY_DUPLEX,
+                .9,
+                (93, 46, 0),
+                2,
+            )
+
+            cv2.imshow("right", right)
+
+        k = cv2.waitKey(0) & 0xFF
+
+        if k == 27:
+            return
+
+
+    def calcXYZBasedOnPixels(self, UL, VL, UR, VR):
+
+        Q = np.array(
+            [
+                [
+                    self.L[0] - self.L[8] * UL,
+                    self.L[1] - self.L[9] * UL,
+                    self.L[2] - self.L[10] * UL,
+                ],
+                [
+                    self.L[4] - self.L[8] * VL,
+                    self.L[5] - self.L[9] * VL,
+                    self.L[6] - self.L[10] * VL,
+                ],
+                [
+                    self.R[0] - self.R[8] * UR,
+                    self.R[1] - self.R[9] * UR,
+                    self.R[2] - self.R[10] * UR,
+                ],
+                [
+                    self.R[4] - self.R[8] * VR,
+                    self.R[5] - self.R[9] * VR,
+                    self.R[6] - self.R[10] * VR,
+                ],
+            ]
+        ).reshape(4, 3)
+
+        q = np.array(
+            [[UL - self.L[3]], [VL - self.L[7]], [UR - self.R[3]], [VR - self.R[7]]]
+        ).reshape(4, 1)
+
+        # Calculates xyz values
+        a_xyz = np.linalg.inv(Q.T @ Q) @ Q.T @ q
+
+        return a_xyz
+
+
     # Get coordinates of a point of interest from the image
     def getXYZ(self):
 
@@ -387,10 +512,15 @@ if __name__ == "__main__":
 
     dltobj.DLT_Load_From_File('/Users/ikas/Documents/ME 537/Robotics_Final_Project/DLT_Data/left_with_robot_right_with_robot.txt')
     # dltobj.getCalibrationPoints()
-    xyz = dltobj.getXYZ()
+
+    dltobj.showCalibrationPoints()
+
+    # for i in range(5):
+    #     xyz = dltobj.getXYZ()
+    #     print(xyz)
 
     # dltobj.DLT_Save_To_File()
     # secondObject = DLT(left, right)
     # secondObject.DLT_Load_From_File('')
 
-    print(xyz)
+    
