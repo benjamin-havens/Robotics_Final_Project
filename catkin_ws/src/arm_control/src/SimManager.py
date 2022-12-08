@@ -20,6 +20,8 @@ class SimManager:
         self.motor_cmds = None
         self.joint_state = JointState()
         self.joint_state.position = [p.angle_to_cmd(d) for d in p.INITIAL_Q]
+        self.joint_state_rad = JointState()
+        self.joint_state_rad.position = p.INITIAL_Q
         # self.plot = rtb.backends.PyPlot.PyPlot()
         # self.plot.launch()
         # self.robot = p.PlanarArm()
@@ -31,6 +33,7 @@ class SimManager:
 
         # PUBLISHERS
         self.pos_pub = rospy.Publisher("/joint_state_inc", JointState, queue_size=1)
+        self.pos_pub_rad = rospy.Publisher("/joint_state_rad", JointState, queue_size=1)
         self.pos_pub.publish(self.joint_state)
 
     def save_cmds(self, motor_cmds):
@@ -41,7 +44,11 @@ class SimManager:
         if self.motor_cmds is not None:
             self.joint_state.position = [int(d) for d in self.motor_cmds.displacements]
         self.pos_pub.publish(self.joint_state)
-        # self.robot.q = np.array([p.cmd_to_angle(d) for d in self.joint_state.position])
+        self.joint_state_rad.position = [
+            p.cmd_to_angle(d) for d in self.joint_state.position
+        ]
+        self.pos_pub_rad.publish(self.joint_state_rad)
+        # self.robot.q = np.array(self.joint_state_rad.position)
         # self.plot.step(dt=0.001)
         self.motor_cmds = None
 
