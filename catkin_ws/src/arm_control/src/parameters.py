@@ -19,6 +19,7 @@ from numpy import pi
 class ArmControlMode(Enum):
     JOINT_CONTROL = auto()  # Joint by joint
     IK_BASE_FRAME = auto()  # IK in the base frame
+    DLT = auto()  # Using the touch and go
 
 
 ##########

@@ -60,12 +60,38 @@ class ModeManager:
                 time.sleep(0.25)
                 return
 
+            if button_dict["back"]:
+                manager.mode = p.ArmControlMode.DLT
+                print("DLT Initiatated")
+                time.sleep(0.25)
+                return
+
         elif self.mode == p.ArmControlMode.JOINT_CONTROL:
 
             # XBOX button switches to IK
             if button_dict["power"]:
                 manager.mode = p.ArmControlMode.IK_BASE_FRAME
                 print("IK Base Control Initiated")
+                time.sleep(0.25)
+                return
+
+            if button_dict["back"]:
+                manager.mode = p.ArmControlMode.DLT
+                print("DLT Initiatated")
+                time.sleep(0.25)
+                return
+
+        elif self.mode == p.ArmControlMode.DLT:
+
+            if button_dict["power"]:
+                manager.mode = p.ArmControlMode.JOINT_CONTROL
+                print("Joint by Joint Control Initiated")
+                time.sleep(0.25)
+                return
+
+            if button_dict["back"]:
+                manager.mode = p.ArmControlMode.IK_BASE_FRAME
+                print("DLT Initiatated")
                 time.sleep(0.25)
                 return
 
