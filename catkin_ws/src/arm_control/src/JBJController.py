@@ -114,7 +114,11 @@ class JBJController:
                 )
                 self.selected_node = Controllable.NODE_1
 
-            direction_to_move = -1 if axes_dict["R trigger"] < 0.9 else 1
+            direction_to_move = (
+                -1
+                if axes_dict["R trigger"] < 0.9 and axes_dict["R trigger"] != 0.0
+                else 1
+            )
             # Node 3 moves up with RT
             if self.selected_node == Controllable.NODE_3:
                 direction_to_move *= -1

@@ -28,8 +28,8 @@ class MotorManager:
         m2 = Ax12(2)
         m3 = Ax12(3)
         self.motors = [m1, m2, m3]
-        for m in self.motors:
-            m.set_moving_speed(p.SPEED)
+        for m, s in zip(self.motors, p.M_SPEEDS):
+            m.set_moving_speed(s)
             m.set_led(True)
 
         # SUBSCRIBERS

@@ -73,9 +73,10 @@ class DLTController:
 
         if button_dict["A"]:
             x, y, z = self.dlt.getXYZ()
+            rospy.logwarn(f'x, y, z before "transform" = {x}, {y}, {z}')
             x = 16 * 2.54 - x
             y = 16 * 2.54 - y
-            z = z - 4.5 * 2.54
+            z = z - 11
             x, y, z = x / 100, y / 100, z / 100
             rospy.logwarn(f"x, y, z = {x}, {y}, {z}")
 

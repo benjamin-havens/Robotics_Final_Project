@@ -61,6 +61,7 @@ def cmd_to_angle(cmd, radians=True):
 DEVICE_NAME = "/dev/ttyUSB0"
 BAUDRATE = int(1e6)
 SPEED = 100
+M_SPEEDS = [10, 40, 50]
 
 
 ############
