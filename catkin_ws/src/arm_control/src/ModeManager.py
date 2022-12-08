@@ -25,6 +25,7 @@ class ModeManager:
         # PUBLISHERS
         self.pub_jointbyjoint = rospy.Publisher("/xbox_jointbyjoint", Joy, queue_size=1)
         self.pub_IK = rospy.Publisher("/xbox_IK", Joy, queue_size=1)
+        self.pub_DLT = rospy.Publisher("/xbox_DLT", Joy, queue_size=1)
 
     def xbox_callback(self, msg):
         """
@@ -105,6 +106,8 @@ class ModeManager:
             self.pub_jointbyjoint.publish(self.xbox_msg)
         elif self.mode == p.ArmControlMode.IK_BASE_FRAME:
             self.pub_IK.publish(self.xbox_msg)
+        elif self.mode == p.ArmControlMode.DLT:
+            self.pub_DLT.publish(self.xbox_msg)
         else:
             raise ValueError(f"Unknown/unimplemented mode {self.mode}.")
         self.xbox_msg = Joy()
